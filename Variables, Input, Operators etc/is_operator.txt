@@ -1,0 +1,201 @@
+Explanation of "is_operator.py":
+
+---
+
+## 👇 Code with Explanation
+
+```python
+a = 10000
+b = 10000
+print(a is b)  # 🔴 Output: False (in most cases)
+```
+
+### ❓ Why False?
+- Python **doesn't cache large integers** (typically above 256).
+- So `a` and `b` are **separate objects** in memory even though they have the same value.
+- Thus, `a is b` → `False`.
+
+---
+
+```python
+c = 255
+b = 255
+print(c is b)  # ✅ Output: True
+```
+
+### ✅ Why True?
+- Python **caches small integers** from **-5 to 256**.
+- So `c` and `b` actually point to the **same memory location**.
+- `c is b` → `True`.
+
+---
+
+```python
+e = "Furqan"
+f = "Furqan"
+print(e is f)  # ✅ Output: True
+```
+
+### ✅ Why True?
+- Python **interns** (reuses) **short strings** that look like identifiers (no spaces or special characters).
+- So `"Furqan"` is **only created once** in memory.
+- `e is f` → `True`.
+
+---
+
+```python
+g = 4.5
+h = 4.5
+print(g is h)  # 🔴 Output: False
+```
+
+### ❌ Why False?
+- Python does **not intern float values**.
+- Even though `g` and `h` look the same, they are **two different objects**.
+- So `g is h` → `False`.
+
+---
+
+```python
+g_l = 4555.5
+h_l = 4555.5
+print(g_l is h_l)  # 🔴 Output: False
+```
+
+### ❌ Still False 
+- Same as above: **floats are not cached**.
+
+---
+
+```python
+i = None
+j = None
+print(j is i)  # ✅ Output: True
+```
+
+### ✅ Why True?
+- Python has **only one `None` object** in memory.
+- Every `None` is the **same singleton object**.
+- `i is j` → `True`.
+
+---
+
+```python
+k = [2, 5, 7]
+l = [2, 5, 7]
+print(k is l)  # 🔴 Output: False
+```
+
+### ❌ Why False?
+- Lists are **mutable**.
+- Even if the values are the same, each list is a **new object in memory**.
+- `k is l` → `False`
+
+---
+
+```python
+m = (1, 5, 8)
+n = (1, 5, 8)
+print(m is n)  # ✅ Output: True (in most cases)
+```
+
+### ✅ Why True?
+- Tuples are **immutable**.
+- For small simple tuples, Python may **cache/reuse them**.
+- So `m is n` → `True` (but not guaranteed for large or complex tuples).
+
+---
+
+```python
+o = {"name": "Furqan"}
+p = {"name": "Furqan"}
+print(o is p)  # 🔴 Output: False
+```
+
+### ❌ Why False?
+- Dictionaries are **mutable**.
+- Each one is a **separate object**, even if contents are the same.
+- `o is p` → `False`.
+
+---
+
+```python
+q = {"Orange"}
+r = {"Orange"}
+print(q is r)  # 🔴 Output: False
+```
+
+### ❌ Why False?
+- Sets are also **mutable**.
+- So `q` and `r` are **different objects**, even if the values match.
+- `q is r` → `False`.
+
+---
+
+## 🧠 Summary Table
+
+| Expression       | Type        | is True? | Why? |
+|------------------|-------------|----------|------|
+| `a is b` (10000) | int         | ❌ False | Big ints not cached |
+| `c is b` (255)   | int         | ✅ True  | Small ints cached (-5 to 256) |
+| `e is f`         | str         | ✅ True  | String interning |
+| `g is h`         | float       | ❌ False | Floats not interned |
+| `g_l is h_l`     | float       | ❌ False | Same reason |
+| `i is j`         | NoneType    | ✅ True  | `None` is singleton |
+| `k is l`         | list        | ❌ False | Lists are mutable |
+| `m is n`         | tuple       | ✅ True* | Simple tuples often reused |
+| `o is p`         | dict        | ❌ False | Dicts are mutable |
+| `q is r`         | set         | ❌ False | Sets are mutable |
+
+---
+
+
+---
+
+### 🔁 Console Output (Windows, maybe optimized by interpreter):
+```
+True
+True 
+True 
+True 
+True 
+True 
+False
+True 
+False
+False
+```
+
+### 🧪 My Actual Python Output (Standard Python behavior):
+```python
+False   # a is b      → Large ints not cached
+True    # c is b      → 255 is cached
+True    # e is f      → Interned strings
+False   # g is h      → Floats not interned
+False   # g_l is h_l  → Floats not interned
+True    # j is i      → None is singleton
+False   # k is l      → Lists are different objects
+False   # m is n      → Tuples not interned in this context
+False   # o is p      → Dicts are different
+False   # q is r      → Sets are different
+```
+
+---
+
+## 🧠 Why the Mismatch?
+You’re probably running this in:
+- **Windows**
+- Possibly using **Miniconda or a specific Python environment**
+- Might be compiled with **some optimization flags**
+
+In some Python implementations:
+- **Small floats**, **simple tuples**, or even some **larger strings/ints** can be *cached or reused* due to **interpreter optimizations** or **constant folding** done by the compiler.
+
+This is **not guaranteed behavior across all platforms**, and Python doesn’t officially promise that `is` will return `True` in all those cases. So while you’re seeing `True`, it's due to how **your environment handles object caching**.
+
+---
+
+### ✅ Takeaway:
+Always use `==` for **value comparison**.  
+Use `is` only when checking **identity** — like comparing to `None`, or checking if two variables are literally the **same object in memory**.
+
