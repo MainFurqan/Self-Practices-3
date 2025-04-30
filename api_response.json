@@ -1,0 +1,12 @@
+{
+    "status": "success",
+    "code": 200,
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "Hamza",
+            "email": "hamza@example.com",
+            "is_active": true
+        }
+    }
+}

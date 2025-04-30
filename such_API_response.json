@@ -1,0 +1,11 @@
+{
+    "status": "success",
+    "data": {
+      "user": {
+        "id": 1,
+        "username": "furqan123",
+        "email": "furqan@example.com"
+      }
+    }
+  }
+  
